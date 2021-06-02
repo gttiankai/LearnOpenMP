@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.19)
+project(LearnOpenMP)
+
+set(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif ()
+
+file(GLOB_RECURSE files ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+foreach (file ${files})
+    string(REGEX REPLACE ".+/(.+)\\..*" "\\1" exe ${file})
+    add_executable(${exe} ${file})
+    target_link_libraries(${exe} PUBLIC OpenMP::OpenMP_CXX)
+    message(\ \ \ \ --\ src/${exe}.cpp\ will\ be\ compiled\ to\ bin/${exe})
+endforeach ()
