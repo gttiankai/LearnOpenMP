@@ -6,14 +6,13 @@
 #define NPOINTS 1000
 #define MAXITER 1000
 
-
 struct d_complex {
   double r;
   double i;
 };
 
-struct d_complex c; // shared
-int numoutside = 0; // shared
+struct d_complex c;  // shared
+int numoutside = 0;  // shared
 
 void testpoint(struct d_complex c) {
   // Does the iteration z=z*z+c, until |z| > 2 when point is known to be outside set
@@ -29,7 +28,7 @@ void testpoint(struct d_complex c) {
     z.i = z.r * z.i * 2 + c.i;
     z.r = temp;
     if ((z.r * z.r + z.i * z.i) > 4.0) {
-#pragma omp atomic // 互斥和原子都可以达到目的,但是我个人认为原子的性能比较好
+#pragma omp atomic  // 互斥和原子都可以达到目的,但是我个人认为原子的性能比较好
       numoutside++;
       break;
     }
@@ -60,5 +59,3 @@ int main() {
   printf("Area of Mandlebrot set = %12.8f +/- %12.8f\n", area, error);
   printf("Correct answer should be around 1.510659\n");
 }
-
-
