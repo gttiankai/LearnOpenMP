@@ -94,10 +94,23 @@ int main(int argc, char* argv[]) {
 
   start = omp_get_wtime();
   {
-    while (p != NULL) {
-      processwork(p);
+    // count the number
+    int count = N + 1;
+    struct node* node_ptr[count];
+    for (int i = 0; i < count; ++i) {
+      node_ptr[i] = p;
       p = p->next;
     }
+#pragma omp parallel default(none) shared(count, node_ptr)
+    {
+#pragma omp single
+      printf(" %d threads \n", omp_get_num_threads());
+#pragma omp for schedule(static)
+      for (int i = 0; i < count; ++i) {
+        processwork(node_ptr[i]);
+        //printf("thread number %d get index %d \n", omp_get_thread_num(), i);
+      }
+    };
   }
 
   end = omp_get_wtime();
