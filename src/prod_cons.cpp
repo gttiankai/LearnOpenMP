@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N        10000000
+#define N        1000000
 
 /* Some random number constants from numerical recipies */
 #define SEED       2531
